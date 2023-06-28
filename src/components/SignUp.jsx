@@ -1,7 +1,11 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-import { auth } from "../firebase";
+import { useDispatch } from "react-redux";
 import { notification } from "antd";
+import { useNavigate } from "react-router";
+
+import { auth } from "../firebase";
+import { userInfoAC } from "../app/slices/app";
 
 const inpClass = "bg-[#85789A] rounded-[20px] w-full px-3 py-1";
 const labelClass = "text-[#85789A] text-[13px] font-bold p-2";
@@ -12,6 +16,8 @@ const SignUp = () => {
     password: "",
     confirmPassword: "",
   });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   function handleChange(e) {
     const { value, name } = e.target;
@@ -32,10 +38,13 @@ const SignUp = () => {
           formData.password
         );
         const user = await userCredential.user;
+        dispatch(userInfoAC(user));
+        sessionStorage.setItem("userInfo", JSON.stringify(user));
+        navigate("/");
         console.log("🚀 ~ file: SignUp.jsx:31 ~ .then ~ user:", user);
         notification["success"]({
-          message: "Added!",
-          description: "A new user is successfully added!",
+          message: "Signed Up!",
+          description: "You have successfully signed up!",
         });
         setFormData({
           email: "",

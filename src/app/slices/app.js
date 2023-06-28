@@ -1,19 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  value: 0,
+  userInfo: null,
 }
 
 export const appSlice = createSlice({
   name: 'app',
   initialState,
   reducers: {
-    increment: (state) => {
-        state.value += 1
+    userInfoAC: (state, action) => {
+        state.userInfo = action.payload
     }
   },
 })
 
-export const { increment } = appSlice.actions
+export const { userInfoAC } = appSlice.actions
 
 export default appSlice.reducer

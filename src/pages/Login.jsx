@@ -16,7 +16,7 @@ const navs = [
 const Login = () => {
   const [curContent, setCurContent] = useState("sign_in");
 
-//   const { value } = useSelector((state) => state.app);
+  //   const { value } = useSelector((state) => state.app);
 
   return (
     <div className="h-screen flex align-center">

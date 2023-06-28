@@ -1,4 +1,11 @@
+import { notification } from "antd";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router";
+
+import { auth } from "../firebase";
+import { userInfoAC } from "../app/slices/app";
 
 const inpClass = "bg-[#85789A] rounded-[20px] w-full px-3 py-1";
 const labelClass = "text-[#85789A] text-[13px] font-bold p-2";
@@ -9,6 +16,8 @@ const SignIn = () => {
     password: "",
     signedIn: false,
   });
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   function handleChange(e) {
     const { value, name, type, checked } = e.target;
@@ -18,17 +27,38 @@ const SignIn = () => {
     });
   }
 
-  function handleSubmit(e) {
+  async function loginFn(e) {
     e.preventDefault();
-    setFormData({
-      email: "",
-      password: "",
-      signedIn: false,
-    });
-    console.log("Your application is accapted: ", formData);
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+      const user = await userCredential.user;
+      dispatch(userInfoAC(user))
+      sessionStorage.setItem('userInfo', JSON.stringify(user))
+      navigate('/')
+      console.log("🚀 ~ file: SignUp.jsx:31 ~ .then ~ user:", user);
+      notification["success"]({
+        message: "Logged In!",
+        description: "You have successfully logged in!",
+      });
+
+      setFormData({
+        email: "",
+        password: "",
+        signedIn: false,
+      });
+    } catch (error) {
+      notification["error"]({
+        message: "Error!",
+        description: error.toString(),
+      });
+    }
   }
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+    <form onSubmit={loginFn} className="flex flex-col gap-3">
       <section>
         <p className={labelClass}>User Email</p>
         <input
