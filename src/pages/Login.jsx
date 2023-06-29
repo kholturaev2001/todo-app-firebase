@@ -18,7 +18,7 @@ const Login = () => {
 
   return (
     <div className="h-screen flex align-center">
-      <div className="w-[400px] bg-[#33224f] rounded-sm m-auto px-10 py-5 h-[450px]">
+      <div className="w-[400px] bg-[#33224f] rounded-sm m-auto px-10 py-5 h-[470px]">
         <div className="flex gap-4 pb-6">
           {navs.map(({ name, id }) => (
             <button

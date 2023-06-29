@@ -100,6 +100,19 @@ const SignUp = () => {
           value={formData.confirmPassword}
         />
       </section>
+      <section className="flex items-center gap-1 ml-3">
+        <input
+          type="checkbox"
+          className="cursor-pointer"
+          name="signedIn"
+          id="signedIn"
+          onChange={handleChange}
+          checked={formData.signedIn}
+        />
+        <label htmlFor="signedIn" className="text-white font-bold text-[11px]">
+          Keep Me Signed In
+        </label>
+      </section>
       <button className="bg-[#EEC110] m-2 rounded-2xl text-white font-bold text-[11px] p-[6px] ">
         SIGN UP
       </button>
