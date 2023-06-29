@@ -111,15 +111,16 @@ const Todos = () => {
     }
   }
 
-  async function checkedTodoFn() {
+  async function checkedTodoFn(todo) {
     setIsModalOpen(false);
     setEditInp("");
     try {
-      const docRef = doc(db, "todos", currentTodo.id);
+      const docRef = doc(db, "todos", todo.id);
       await setDoc(docRef, {
-        ...currentTodo,
-        status: !currentTodo.status,
+        ...todo,
+        status: !todo.status,
       });
+      console.log(todo);
       notification["success"]({
         message: "Checked!",
         description: "The todo is successfully checked!",
@@ -128,6 +129,7 @@ const Todos = () => {
       console.log("Error", error.message);
     }
   }
+  
 
   return (
     <div className="w-screen h-screen">
@@ -177,7 +179,7 @@ const Todos = () => {
                         checked={todo.status}
                         onChange={() => {
                           setCurrentTodo(todo);
-                          checkedTodoFn();
+                          checkedTodoFn(todo);
                         }}
                       />
                       <p>{todo.title}</p>
