@@ -1,11 +1,9 @@
 import { notification } from "antd";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 
 import { auth } from "../firebase";
-import { userInfoAC } from "../app/slices/app";
 
 const inpClass = "bg-[#85789A] rounded-[20px] w-full px-3 py-1";
 const labelClass = "text-[#85789A] text-[13px] font-bold p-2";
@@ -16,7 +14,6 @@ const SignIn = () => {
     password: "",
     signedIn: false,
   });
-  const dispatch = useDispatch()
   const navigate = useNavigate()
 
   function handleChange(e) {
@@ -36,10 +33,8 @@ const SignIn = () => {
         formData.password
       );
       const user = await userCredential.user;
-      dispatch(userInfoAC(user))
       sessionStorage.setItem('userInfo', JSON.stringify(user))
       navigate('/')
-      console.log("🚀 ~ file: SignUp.jsx:31 ~ .then ~ user:", user);
       notification["success"]({
         message: "Logged In!",
         description: "You have successfully logged in!",

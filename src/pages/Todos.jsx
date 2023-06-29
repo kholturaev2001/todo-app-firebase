@@ -20,7 +20,7 @@ import {
 import { doc, setDoc } from "firebase/firestore";
 import EditModal from "./EditModal";
 import Bin from "../icons/Bin";
-import EditIcon from './../icons/EditIcon';
+import EditIcon from "./../icons/EditIcon";
 
 const Todos = () => {
   const userEmail = JSON.parse(sessionStorage.getItem("userInfo"))?.email;
@@ -162,7 +162,7 @@ const Todos = () => {
             <div className="bg-[#F7F7F7] p-4 font-bold">
               <p>Todos ({todosData.length})</p>
             </div>
-            <div className='px-5'>
+            <div className="px-5">
               <div className="flex my-5">
                 <Input
                   className="border border-[gray]"
@@ -204,39 +204,39 @@ const Todos = () => {
                           setEditInp(todo.title);
                           setCurrentTodo(todo);
                         }}
-                        className='bg-[#28A745] py-[5px] p-[10px] rounded-md'
+                        className="bg-[#28A745] py-[5px] p-[10px] rounded-md"
                       >
                         <EditIcon />
                       </button>
-                      <button className='bg-[#DC3545] py-[5px] p-[10px] rounded-md' onClick={() => deleteTodo(todo.id)}>
+                      <button
+                        className="bg-[#DC3545] py-[5px] p-[10px] rounded-md"
+                        onClick={() => deleteTodo(todo.id)}
+                      >
                         <Bin />
                       </button>
                     </div>
                   </div>
                 ))}
-
               </div>
-                <Pagination
-                  current={current}
-                  onChange={pagOnchange}
-                  total={todosData.length}
-                  pageSize={pageSize}
-                  className="flex justify-center m-3"
-                />
+              <Pagination
+                current={current}
+                onChange={pagOnchange}
+                total={todosData.length}
+                pageSize={pageSize}
+                className="flex justify-center m-3"
+              />
             </div>
           </div>
         )}
       </div>
 
-      {
-        <EditModal
-          editInp={editInp}
-          isModalOpen={isModalOpen}
-          setEditInp={setEditInp}
-          editTodoFn={editTodoFn}
-          onCancel={() => setIsModalOpen(false)}
-        />
-      }
+      <EditModal
+        editInp={editInp}
+        isModalOpen={isModalOpen}
+        setEditInp={setEditInp}
+        editTodoFn={editTodoFn}
+        onCancel={() => setIsModalOpen(false)}
+      />
     </div>
   );
 };
