@@ -2,7 +2,6 @@ import {
   addDoc,
   collection,
   deleteDoc,
-  getDocs,
   onSnapshot,
   orderBy,
   query,
@@ -10,9 +9,18 @@ import {
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../firebase";
-import { Button, Checkbox, Input, Skeleton, notification } from "antd";
+import {
+  Button,
+  Checkbox,
+  Input,
+  Pagination,
+  Skeleton,
+  notification,
+} from "antd";
 import { doc, setDoc } from "firebase/firestore";
 import EditModal from "./EditModal";
+import Bin from "../icons/Bin";
+import EditIcon from './../icons/EditIcon';
 
 const Todos = () => {
   const userEmail = JSON.parse(sessionStorage.getItem("userInfo"))?.email;
@@ -22,8 +30,7 @@ const Todos = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editInp, setEditInp] = useState("");
   const [currentTodo, setCurrentTodo] = useState(null);
-  console.log("🚀 ~ file: Todos.jsx:25 ~ Todos ~ currentTodo:", currentTodo)
-
+  const [current, setCurrent] = useState(1);
 
   function logoutFn() {
     sessionStorage.removeItem("userInfo");
@@ -120,16 +127,20 @@ const Todos = () => {
         ...todo,
         status: !todo.status,
       });
-      console.log(todo);
-      notification["success"]({
-        message: "Checked!",
-        description: "The todo is successfully checked!",
-      });
     } catch (error) {
       console.log("Error", error.message);
     }
   }
-  
+
+  const pageSize = 5;
+
+  const pagOnchange = (page) => {
+    setCurrent(page);
+  };
+
+  const startIndex = (current - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const displayedTodos = todosData?.slice(startIndex, endIndex);
 
   return (
     <div className="w-screen h-screen">
@@ -139,7 +150,7 @@ const Todos = () => {
           Logout
         </button>
       </nav>
-      <div className="w-[550px] mt-5 mx-auto">
+      <div className="max-w-[550px] border border-gray rounded-md mt-5 mx-auto">
         {todosLoading && (
           <div className="flex flex-col gap-5">
             <Skeleton active />
@@ -148,10 +159,10 @@ const Todos = () => {
         )}
         {!todosLoading && (
           <div>
-            <div>
+            <div className="bg-[#F7F7F7] p-4 font-bold">
               <p>Todos ({todosData.length})</p>
             </div>
-            <div>
+            <div className='px-5'>
               <div className="flex my-5">
                 <Input
                   className="border border-[gray]"
@@ -167,13 +178,15 @@ const Todos = () => {
                   Submit
                 </Button>
               </div>
-              <div className="flex flex-col">
-                {todosData?.map((todo) => (
+              <div className="flex flex-col  border border-gray min-h-[350px]">
+                {displayedTodos?.map((todo, id) => (
                   <div
                     key={todo.id}
-                    className="flex items-center bg-[wheat] justify-between p-4"
+                    className={` ${
+                      id % 2 === 0 ? "bg-[#F7F7F7]" : ""
+                    } flex items-center justify-between p-4`}
                   >
-                    <div className="">
+                    <div className="flex items-center gap-2">
                       <Checkbox
                         type="checkbox"
                         checked={todo.status}
@@ -184,23 +197,32 @@ const Todos = () => {
                       />
                       <p>{todo.title}</p>
                     </div>
-                    <div className="">
-                      <Button
+                    <div className="flex items-center gap-2">
+                      <button
                         onClick={() => {
                           setIsModalOpen(true);
                           setEditInp(todo.title);
                           setCurrentTodo(todo);
                         }}
+                        className='bg-[#28A745] py-[5px] p-[10px] rounded-md'
                       >
-                        Edit
-                      </Button>
-                      <Button onClick={() => deleteTodo(todo.id)}>
-                        Delete
-                      </Button>
+                        <EditIcon />
+                      </button>
+                      <button className='bg-[#DC3545] py-[5px] p-[10px] rounded-md' onClick={() => deleteTodo(todo.id)}>
+                        <Bin />
+                      </button>
                     </div>
                   </div>
                 ))}
+
               </div>
+                <Pagination
+                  current={current}
+                  onChange={pagOnchange}
+                  total={todosData.length}
+                  pageSize={pageSize}
+                  className="flex justify-center m-3"
+                />
             </div>
           </div>
         )}
